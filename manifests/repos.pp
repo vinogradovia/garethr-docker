@@ -17,17 +17,17 @@ class docker::repos {
           $key_source = $docker::package_key_source
           $package_key = $docker::package_key
         }
-        apt::source { 'docker':
-          location          => $location,
-          release           => $docker::package_release,
-          repos             => $docker::package_repos,
-          key               => $package_key,
-          key_source        => $key_source,
-          required_packages => 'debian-keyring debian-archive-keyring',
-          pin               => '10',
-          include_src       => false,
-        }
         if $docker::manage_package {
+          apt::source { 'docker':
+            location          => $location,
+            release           => $docker::package_release,
+            repos             => $docker::package_repos,
+            key               => $package_key,
+            key_source        => $key_source,
+            required_packages => 'debian-keyring debian-archive-keyring',
+            pin               => '10',
+            include_src       => false,
+          }
           include apt
           if $::operatingsystem == 'Debian' and $::lsbdistcodename == 'wheezy' {
             include apt::backports

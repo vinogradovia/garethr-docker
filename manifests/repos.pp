@@ -17,27 +17,27 @@ class docker::repos {
           $key_source = $docker::package_key_source
           $package_key = $docker::package_key
         }
-        apt::source { 'docker':
-          location          => $location,
-          release           => $docker::package_release,
-          repos             => $docker::package_repos,
-          key               => $package_key,
-          key_source        => $key_source,
-          required_packages => 'debian-keyring debian-archive-keyring',
-          include_src       => false,
-        }
-        $url_split = split($location, '/')
-        $repo_host = $url_split[2]
-        $pin_ensure = $docker::pin_upstream_package_source ? {
-            true    => 'present',
-            default => 'absent',
-        }
-        apt::pin { 'docker':
-          ensure   => $pin_ensure,
-          origin   => $repo_host,
-          priority => $docker::apt_source_pin_level,
-        }
         if $docker::manage_package {
+          apt::source { 'docker':
+            location          => $location,
+            release           => $docker::package_release,
+            repos             => $docker::package_repos,
+            key               => $package_key,
+            key_source        => $key_source,
+            required_packages => 'debian-keyring debian-archive-keyring',
+            include_src       => false,
+          }
+          $url_split = split($location, '/')
+          $repo_host = $url_split[2]
+          $pin_ensure = $docker::pin_upstream_package_source ? {
+              true    => 'present',
+              default => 'absent',
+          }
+          apt::pin { 'docker':
+            ensure   => $pin_ensure,
+            origin   => $repo_host,
+            priority => $docker::apt_source_pin_level,
+          }
           include apt
           if $::operatingsystem == 'Debian' and $::lsbdistcodename == 'wheezy' {
             include apt::backports

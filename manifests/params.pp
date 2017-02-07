@@ -73,6 +73,7 @@ class docker::params {
   $storage_pool_autoextend_percent   = undef
   $storage_config_template           = 'docker/etc/sysconfig/docker-storage.erb'
   $compose_version                   = '1.9.0'
+  $compose_download_base_path        = 'https://github.com/docker/compose/releases/download'
   $compose_install_path              = '/usr/local/bin'
 
   case $::osfamily {
